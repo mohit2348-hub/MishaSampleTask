@@ -1,11 +1,12 @@
 package com.example.mishasampletask
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mishasampletask.adapter.DescAdapter
@@ -14,7 +15,7 @@ import com.example.mishasampletask.model.UserData
 import com.google.firebase.database.*
 
 
-class DescFragment : Fragment() {
+class DescFragment : Fragment(), OnItemClickListener {
 
     private lateinit var binding: FragmentDescBinding
     private var dataList: List<UserData>? = null
@@ -53,6 +54,7 @@ class DescFragment : Fragment() {
             FirebaseDatabase.getInstance().getReference("UserData")
         dataList = mutableListOf()
         val adapter = DescAdapter(dataList!!, requireContext())
+        adapter.listener = this
         binding.rvDesc.adapter = adapter
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -109,6 +111,32 @@ class DescFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(binding.rvDesc)
+    }
+
+    override fun onItemClick(position: Int, title: String, desc: String, date: Long) {
+        Log.d("TAG", "onItemClick:" + title)
+        Log.d("TAG", "onItemClick:" + desc)
+        Log.d("TAG", "onItemClick:" + date)
+        initFragment(title, desc, date)
+
+    }
+
+
+    private fun initFragment(title: String, desc: String, date: Long) {
+
+        val descFragment = DescDetailFragment()
+
+        //send data
+        val bundle = Bundle()
+        bundle.putString("title", title)
+        bundle.putString("desc", desc)
+        bundle.putLong("date", date)
+        descFragment.arguments = bundle
+
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentContainer, descFragment)
+        transaction.addToBackStack(null) // Add to back stack if you want to navigate back
+        transaction.commit()
     }
 
 

@@ -4,17 +4,33 @@ import android.content.Context
 import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mishasampletask.OnItemClickListener
 import com.example.mishasampletask.R
 import com.example.mishasampletask.model.UserData
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.values
+
 
 class DescAdapter(private val dataList: List<UserData>, private val context: Context) :
-    RecyclerView.Adapter<DescViewHolder>() {
+    RecyclerView.Adapter<DescAdapter.DescViewHolder>() {
+    var listener: OnItemClickListener? = null
+    var date: Long? = null
+    var desc: String = ""
+
+    inner class DescViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val titleTextView: TextView = itemView.findViewById(R.id.descItemTitle)
+        val titleCheckBoxView: CheckBox = itemView.findViewById(R.id.descTextCheckBox)
+        var rvbutton: ConstraintLayout = itemView.findViewById(R.id.rvbutton)
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DescViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_desc, parent, false)
@@ -47,6 +63,18 @@ class DescAdapter(private val dataList: List<UserData>, private val context: Con
             }
 
         }
+
+        holder.rvbutton.setOnClickListener {
+            if (position != RecyclerView.NO_POSITION) {
+                listener?.onItemClick(
+                    position,
+                    holder.titleTextView.text.toString(),
+                    dataObject.desc,
+                    dataObject.date!!
+                )
+
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -71,4 +99,5 @@ class DescAdapter(private val dataList: List<UserData>, private val context: Con
 
 
     }
+
 }

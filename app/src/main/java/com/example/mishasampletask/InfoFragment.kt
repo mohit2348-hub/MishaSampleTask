@@ -38,9 +38,10 @@ class InfoFragment : Fragment() {
         binding?.submitBtn?.setOnClickListener {
             val title = binding?.titleEditText?.text.toString()
             val desc = binding?.descEditText?.text.toString()
+            val currentTime = System.currentTimeMillis()
             database = FirebaseDatabase.getInstance().getReference("UserData")
             try {
-                val userData = UserData(title, desc, "",true)
+                val userData = UserData(title, desc, "", true, currentTime)
                 database.child(title).setValue(userData).addOnCompleteListener {
                     binding.titleEditText.text?.clear()
                     binding.descEditText.text?.clear()

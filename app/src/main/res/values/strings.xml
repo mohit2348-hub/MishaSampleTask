@@ -7,4 +7,8 @@
     <string name="txt_submit">Submit</string>
     <string name="txt_check_list">Check Records</string>
     <string name="txt_records">Records</string>
+    <string name="txt_records_details">Records Details</string>
+    <string name="txt_records_text">Title:</string>
+    <string name="txt_records_desc_text">Description:</string>
+    <string name="txt_records_date">Date:</string>
 </resources>
